@@ -4,7 +4,8 @@ An argumentatum ad populum.
 
 ## Relequent
 
-- [Max](https://github.com/mefrem)
+- [Tobias](https://github.com/tobias-fyi)
+- [Zhenya](https://github.com/zwarshavsky)
 - [Nicole](https://github.com/nwilliams030)
-- Zhenya
-- Bhavani
+- [Max](https://github.com/mefrem)
+- [Bhavani](https://github.com/Bhavani-Rajan)

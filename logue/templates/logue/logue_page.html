@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% block fiveup_bodyclass %}single is-preload{% endblock fiveup_bodyclass %}
+
+{% block body_class %}template-loguepage{% endblock body_class %}
+
+{% comment %} {% block title %}{{ page.title }} | Notique{% endblock title %} {% endcomment %}
+
+{% block content %}
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Header -->
+		<header id="header">
+			<h1><a href="#">Notique</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="{{ page.get_parent.url }}">Back to List</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search">
+						<a class="fa-search" href="#search">Search</a>
+						<form id="search" method="get" action="#">
+							<input type="text" name="query" placeholder="Search" />
+						</form>
+					</li>
+					<li class="menu">
+						<a class="fa-bars" href="#menu">Menu</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<!-- Menu -->
+		<section id="menu">
+
+			<!-- Search -->
+				<section>
+					<form class="search" method="get" action="#">
+						<input type="text" name="query" placeholder="Search" />
+					</form>
+				</section>
+
+			<!-- Links -->
+				<section>
+					<ul class="links">
+						<li>
+							<a href="#">
+								<h3>Lorem ipsum</h3>
+								<p>Feugiat tempus veroeros dolor</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Dolor sit amet</h3>
+								<p>Sed vitae justo condimentum</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Feugiat veroeros</h3>
+								<p>Phasellus sed ultricies mi congue</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Etiam sed consequat</h3>
+								<p>Porta lectus amet ultricies</p>
+							</a>
+						</li>
+					</ul>
+				</section>
+
+			<!-- Actions -->
+				<section>
+					<ul class="actions stacked">
+						<li><a href="#" class="button large fit">Log In</a></li>
+					</ul>
+				</section>
+
+		</section>
+
+		<!-- Main -->
+		<div id="main">
+
+			<!-- Post -->
+				<article class="post">
+					<header>
+						<div class="title">
+							<h2><a href="#">{{ page.title }}</a></h2>
+							<p>{{ page.intro }}</p>
+						</div>
+						<div class="meta">
+							<time class="published" datetime="2015-11-01">{{ page.date }}</time>
+							<a href="#" class="author"><span class="name">Jane Doe</span><img src="{% static 'images/avatar.jpg' %}" alt="" /></a>
+						</div>
+					</header>
+					<span class="image featured">{% image page.header_image original %}</span>
+					<p>{{ page.body|richtext }}</p>
+					<footer>
+						<ul class="stats">
+							<li><a href="#">General</a></li>
+							<li><a href="#" class="icon solid fa-heart">28</a></li>
+							<li><a href="#" class="icon solid fa-comment">128</a></li>
+						</ul>
+					</footer>
+				</article>
+
+		</div>
+
+	</div>
+
+{% endblock content %}

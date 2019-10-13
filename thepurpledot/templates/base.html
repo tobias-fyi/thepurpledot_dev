@@ -1,10 +1,14 @@
 {% load static wagtailuserbar %}
 
-<!DOCTYPE html>
-<html class="no-js" lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>
+<!DOCTYPE HTML>
+<!--
+	Future Imperfect by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en">
+	<head>
+		<title>
             {% block title %}
                 {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
             {% endblock %}
@@ -14,27 +18,47 @@
                 {% endwith %}
             {% endblock %}
         </title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/thepurpledot.css' %}">
+		{# Global stylesheets #}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/notique.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}"/>
 
         {% block extra_css %}
             {# Override this in templates to add extra stylesheets #}
         {% endblock %}
-    </head>
+	</head>
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% wagtailuserbar %}
+<body class="{% block fiveup_bodyclass %}{% endblock fiveup_bodyclass %} {% block body_class %}{% endblock body_class %}">
+    {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+    {% block content %}{% endblock content %}
 
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/thepurpledot.js' %}"></script>
+    <!-- Footer -->
+    <section id="footer">
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon solid fa-rss"><span class="label">RSS</span></a></li>
+            <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+        </ul>
+        <p class="copyright">&copy; Untitled. Design: <a href="http://html5up.net">HTML5 UP</a>. Images: <a href="http://unsplash.com">Unsplash</a>.</p>
+    </section>
 
-        {% block extra_js %}
-            {# Override this in templates to add extra javascript #}
-        {% endblock %}
-    </body>
+    {# Global javascript #}
+    <script type="text/javascript" src="{% static 'js/notique.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/browser.min.js' %}"></script>
+    <script src="{% static 'js/breakpoints.min.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}
+        {# Override this in templates to add extra javascript #}
+    {% endblock %}
+
+</body>
+
 </html>

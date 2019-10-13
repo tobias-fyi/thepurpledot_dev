@@ -15,7 +15,7 @@
 
 		<!-- Header -->
 			<header id="header">
-				<h1><a href="{% pageurl page %}">Notique</a></h1>
+				<h1><a href="{% pageurl page %}">The Purple Dot</a></h1>
 				<nav class="links">
 					<ul>
 						<li><a href="#">Home</a></li>
@@ -93,7 +93,7 @@
 			<div id="main">
 
 				<!-- Post -->
-				{% for post in page.get_children %}
+				{% for post in logue %}
 					{% with post=post.specific %}
 
 						<article class="post">
@@ -107,7 +107,16 @@
 									<a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>
 								</div>
 							</header>
-							<a href="{% pageurl post %}" class="image featured">{% image post.header_image original %}</a>
+							<a href="{% pageurl post %}" class="image featured">{% image post.header_image fill-200x200-c100 %}</a>
+
+							{% comment %} <!-- Thumbnail -->
+							{% with post.main_image as main_image %}
+								{% if main_image %}
+									{% image main_image fill-160x100 %}
+								{% endif %}
+							{% endwith %}
+							{% endcomment %}
+
 							<p>{{ post.body|richtext|truncatewords_html:24|safe }}</p>
 							<footer>
 								<ul class="actions">

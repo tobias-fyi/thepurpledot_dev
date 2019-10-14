@@ -93,6 +93,7 @@ class LoguePage(Page):
         FieldPanel("intro"),
         FieldPanel("body", classname="full"),
         InlinePanel("gallery_images", label="Gallery images"),
+        InlinePanel("related_links", label="Related links"),
     ]
 
     promote_panels = [ImageChooserPanel("feed_image")]
@@ -104,3 +105,11 @@ class LoguePageGalleryImage(Orderable):
     caption = models.CharField(blank=True, max_length=250)
 
     panels = [ImageChooserPanel("image"), FieldPanel("caption")]
+
+
+class LoguePageRelatedLink(Orderable):
+    page = ParentalKey(LoguePage, on_delete=models.CASCADE, related_name="related_links")
+    name = models.CharField(max_length=255)
+    url = models.URLField()
+
+    panels = [FieldPanel("name"), FieldPanel("url")]

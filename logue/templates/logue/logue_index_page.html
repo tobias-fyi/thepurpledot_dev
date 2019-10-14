@@ -103,11 +103,11 @@
 									<p>{{ post.intro }}</p>
 								</div>
 								<div class="meta">
-									<time class="published" datetime="2015-11-01">{{ post.date }}</time>
-									<a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>
+									<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
+									<a href="#" class="author"><span class="name">Jane Doe</span><img src="{% static 'images/avatar.jpg' %}" alt="" /></a>
 								</div>
 							</header>
-							<a href="{% pageurl post %}" class="image featured">{% image post.header_image fill-200x200-c100 %}</a>
+							<a href="{% pageurl post %}" class="image featured">{% image post.header_image max-1000x1000 %}</a>
 
 							{% comment %} <!-- Thumbnail -->
 							{% with post.main_image as main_image %}
@@ -117,13 +117,19 @@
 							{% endwith %}
 							{% endcomment %}
 
-							<p>{{ post.body|richtext|truncatewords_html:24|safe }}</p>
+							<p>{{ post.body|richtext|truncatewords_html:24 }}</p>
 							<footer>
 								<ul class="actions">
 									<li><a href="{% pageurl post %}" class="button large">Continue Reading</a></li>
 								</ul>
 								<ul class="stats">
-									<li><a href="#">General</a></li>
+									{% with categories=post.categories.all %}
+										{% if categories %}
+												{% for category in categories %}
+													<li style="display: inline">{{ category.name }}</li>
+												{% endfor %}
+										{% endif %}
+									{% endwith %}
 									<li><a href="#" class="icon solid fa-heart">28</a></li>
 									<li><a href="#" class="icon solid fa-comment">128</a></li>
 								</ul>
@@ -157,45 +163,19 @@
 					<section>
 						<div class="mini-posts">
 
-							<!-- Mini Post -->
-								<article class="mini-post">
-									<header>
-										<h3><a href="single.html">Vitae sed condimentum</a></h3>
-										<time class="published" datetime="2015-10-20">October 20, 2015</time>
-										<a href="#" class="author"><img src="images/avatar.jpg" alt="" /></a>
-									</header>
-									<a href="single.html" class="image"><img src="images/pic04.jpg" alt="" /></a>
-								</article>
-
-							<!-- Mini Post -->
-								<article class="mini-post">
-									<header>
-										<h3><a href="single.html">Rutrum neque accumsan</a></h3>
-										<time class="published" datetime="2015-10-19">October 19, 2015</time>
-										<a href="#" class="author"><img src="images/avatar.jpg" alt="" /></a>
-									</header>
-									<a href="single.html" class="image"><img src="images/pic05.jpg" alt="" /></a>
-								</article>
-
-							<!-- Mini Post -->
-								<article class="mini-post">
-									<header>
-										<h3><a href="single.html">Odio congue mattis</a></h3>
-										<time class="published" datetime="2015-10-18">October 18, 2015</time>
-										<a href="#" class="author"><img src="images/avatar.jpg" alt="" /></a>
-									</header>
-									<a href="single.html" class="image"><img src="images/pic06.jpg" alt="" /></a>
-								</article>
-
-							<!-- Mini Post -->
-								<article class="mini-post">
-									<header>
-										<h3><a href="single.html">Enim nisl veroeros</a></h3>
-										<time class="published" datetime="2015-10-17">October 17, 2015</time>
-										<a href="#" class="author"><img src="images/avatar.jpg" alt="" /></a>
-									</header>
-									<a href="single.html" class="image"><img src="images/pic07.jpg" alt="" /></a>
-								</article>
+							{% for post in page.get_children %}
+								{% with post=post.specific %}
+								<!-- Mini Post -->
+									<article class="mini-post">
+										<header>
+											<h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
+											<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
+											<a href="#" class="author"><img src="{% static 'images/avatar.jpg' %}" alt="" /></a>
+										</header>
+										<a href="{% pageurl post %}" class="image thumbnail">{% image post.header_image max-400x400 %}</a>
+									</article>
+								{% endwith %}
+							{% endfor %}
 
 						</div>
 					</section>
@@ -210,9 +190,9 @@
 										<article>
 											<header>
 												<h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
-												<time class="published" datetime="2015-10-20">October 20, 2015</time>
+												<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
 											</header>
-											<a href="{% pageurl post %}" class="image"><img src="images/pic08.jpg" alt="" /></a>
+											<a href="{% pageurl post %}" class="image thumbnail">{% image post.header_image max-400x400 %}</a>
 										</article>
 									</li>
 								{% endwith %}
@@ -221,7 +201,7 @@
 				<!-- About -->
 					<section class="blurb">
 						<h2>About</h2>
-						<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod amet placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at phasellus sed ultricies.</p>
+						<p>The Purple Dot is a group of storytellin' data scientists and developers.</p>
 						<ul class="actions">
 							<li><a href="#" class="button">Learn More</a></li>
 						</ul>

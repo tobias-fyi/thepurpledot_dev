@@ -6,21 +6,50 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from wagtail.snippets.models import register_snippet
+from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
 from wagtail.core.models import Page, Orderable
-from wagtail.core.fields import RichTextField
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.core.fields import RichTextField, StreamField
+from wagtail.core import blocks
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, StreamFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
+from wagtail.images.blocks import ImageChooserBlock
 from wagtail.search import index
 
 
+@register_snippet
+class LogueAuthor(models.Model):
+    """Logue author for snippets."""
+
+    name = models.CharField(max_length=140)
+    website = models.URLField(blank=True, null=True)
+    image = models.ForeignKey(
+        "wagtailimages.Image", on_delete=models.SET_NULL, null=True, blank=False, related_name="+"
+    )
+
+    panels = [
+        MultiFieldPanel([FieldPanel("name"), ImageChooserPanel("image")], heading="Name and Image"),
+        MultiFieldPanel([FieldPanel("website")], heading="Links"),
+    ]
+
+    def __str__(self):
+        """String repr to define format for returned data."""
+        return self.name
+
+    class Meta:
+        verbose_name = "Logue Author"
+        verbose_name_plural = "Logue Authors"
+
+
 class LogueIndexPage(Page):
+    """Index of all individual Logue pages."""
+
     intro = RichTextField(blank=True)
 
     def get_context(self, request):
         # Include only published posts, ordered in reverse chron
         context = super().get_context(request)
-        logue = self.get_children().live().order_by("-first_published_at")
+        logue = self.get_children().live().order_by("first_published_at")
         context["logue"] = logue
         return context
 
@@ -32,6 +61,8 @@ class LoguePageTag(TaggedItemBase):
 
 
 class LogueTagIndexPage(Page):
+    """Index page that lists all tags."""
+
     def get_context(self, request):
 
         # Filter by tag
@@ -55,7 +86,8 @@ class LogueCategory(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "logue categories"
+        verbose_name = "Logue Category"
+        verbose_name_plural = "Logue Categories"
 
 
 class LoguePage(Page):
@@ -64,7 +96,13 @@ class LoguePage(Page):
         "wagtailimages.Image", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
     )
     intro = models.CharField(max_length=250)
-    body = RichTextField(blank=True)
+    body = StreamField(
+        [
+            ("heading", blocks.CharBlock(classname="full title")),
+            ("paragraph", blocks.RichTextBlock()),
+            ("image", ImageChooserBlock()),
+        ]
+    )
     tags = ClusterTaggableManager(through=LoguePageTag, blank=True)
     categories = ParentalManyToManyField("logue.LogueCategory", blank=True)
     feed_image = models.ForeignKey(
@@ -86,17 +124,31 @@ class LoguePage(Page):
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
-            [FieldPanel("date"), FieldPanel("tags"), FieldPanel("categories", widget=forms.CheckboxSelectMultiple)],
-            heading="Logue information",
+            [
+                InlinePanel("logue_authors", label="Author", min_num=1, max_num=6),
+                FieldPanel("date"),
+                FieldPanel("tags"),
+                FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
+            ],
+            heading="Logue Information",
         ),
         ImageChooserPanel("header_image"),
         FieldPanel("intro"),
-        FieldPanel("body", classname="full"),
+        StreamFieldPanel("body"),
         InlinePanel("gallery_images", label="Gallery images"),
         InlinePanel("related_links", label="Related links"),
     ]
 
     promote_panels = [ImageChooserPanel("feed_image")]
+
+
+class LogueAuthorsOrderable(Orderable):
+    """Allows selection of one or more authors from Snippets."""
+
+    page = ParentalKey(LoguePage, on_delete=models.CASCADE, related_name="logue_authors")
+    author = models.ForeignKey("logue.LogueAuthor", on_delete=models.CASCADE)
+
+    panels = [SnippetChooserPanel("author")]
 
 
 class LoguePageGalleryImage(Orderable):

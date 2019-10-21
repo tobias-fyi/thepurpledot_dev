@@ -106,9 +106,21 @@
 					{% endwith %}
 				</div>
 				<div class="meta">
-					<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ page.date }}</time>
-					<a href="#" class="author"><span class="name">Jane Doe</span><img src="{% static 'images/avatar.jpg' %}"
-							alt="" /></a>
+					<time class="published" datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date }}</time>
+					{% with authors=page.logue_authors.all %}
+						{% if authors %}
+							<ul>
+								{% for iter in authors %}
+									{% image iter.author.image fill-100x100 as img %}
+									<li style="display: inline">
+										<a href="{{ iter.author.website }}" class="author">
+										<span class="name">{{ iter.author.name }}</span>
+										<img src="{{ img.url }}" alt="{{ iter.author.name }}" /></a>
+									</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
+					{% endwith %}
 				</div>
 			</header>
 			<span class="image featured">{% image page.header_image original %}</span>

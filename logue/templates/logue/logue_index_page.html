@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block fiveup_bodyclass %}is-preload{% endblock fiveup_bodyclass %}
 
@@ -10,204 +7,148 @@
 
 {% block content %}
 
-	<!-- Wrapper -->
-	<div id="wrapper">
-
-		<!-- Header -->
-			<header id="header">
-				<h1><a href="{% pageurl page %}">The Purple Dot</a></h1>
-				<nav class="links">
-					<ul>
-						<li><a href="#">Home</a></li>
-						<li><a href="#">Articles</a></li>
-						<li><a href="#">Interactive</a></li>
-						<li><a href="#">Curated</a></li>
-						<li><a href="#">About</a></li>
-					</ul>
-				</nav>
-				<nav class="main">
-					<ul>
-						<li class="search">
-							<a class="fa-search" href="#search">Search</a>
-							<form id="search" method="get" action="#">
-								<input type="text" name="query" placeholder="Search" />
-							</form>
-						</li>
-						<li class="menu">
-							<a class="fa-bars" href="#menu">Menu</a>
-						</li>
-					</ul>
-				</nav>
-			</header>
-
-		<!-- Menu -->
-			<section id="menu">
-
-				<!-- Search -->
-					<section>
-						<form class="search" method="get" action="#">
-							<input type="text" name="query" placeholder="Search" />
-						</form>
-					</section>
-
-				<!-- Links -->
-					<section>
-						<ul class="links">
-							<li>
-								<a href="#">
-									<h3>Lorem ipsum</h3>
-									<p>Feugiat tempus veroeros dolor</p>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<h3>Dolor sit amet</h3>
-									<p>Sed vitae justo condimentum</p>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<h3>Feugiat veroeros</h3>
-									<p>Phasellus sed ultricies mi congue</p>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<h3>Etiam sed consequat</h3>
-									<p>Porta lectus amet ultricies</p>
-								</a>
-							</li>
-						</ul>
-					</section>
-
-				<!-- Actions -->
-					<section>
-						<ul class="actions stacked">
-							<li><a href="#" class="button large fit">Log In</a></li>
-						</ul>
-					</section>
-
-			</section>
-
 		<!-- Main -->
-			<div id="main">
+		<div id="main">
 
-				<!-- Post -->
-				{% for post in logue %}
-					{% with post=post.specific %}
+			<!-- Post -->
+			{% for post in logue %}
+				{% with post=post.specific %}
 
-						<article class="post">
-							<header>
-								<div class="title">
-									<h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-									<p>{{ post.intro }}</p>
-								</div>
-								<div class="meta">
-									<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
-									<a href="#" class="author"><span class="name">Jane Doe</span><img src="{% static 'images/avatar.jpg' %}" alt="" /></a>
-								</div>
-							</header>
-							<a href="{% pageurl post %}" class="image featured">{% image post.header_image max-1000x1000 %}</a>
+					<article class="post">
+						<header>
+							<div class="title">
+								<h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+								<p>{{ post.intro }}</p>
+							</div>
+							<div class="meta">
+								<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
+								{% with authors=post.logue_authors.all %}
+									{% if authors %}
+										<ul>
+											{% for iter in authors %}
+												{% image iter.author.image fill-100x100 as img %}
+												<li style="display: inline">
+													<a href="{{ iter.author.website }}" class="author">
+													<span class="name">{{ iter.author.name }}</span>
+													<img src="{{ img.url }}" alt="{{ iter.author.name }}" /></a>
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								{% endwith %}
+							</div>
+						</header>
+						<a href="{% pageurl post %}" class="image featured">{% image post.header_image max-1000x1000 %}</a>
 
-							{% comment %} <!-- Thumbnail -->
-							{% with post.main_image as main_image %}
-								{% if main_image %}
-									{% image main_image fill-160x100 %}
-								{% endif %}
-							{% endwith %}
-							{% endcomment %}
+						{% comment %} <!-- Thumbnail -->
+						{% with post.main_image as main_image %}
+							{% if main_image %}
+								{% image main_image fill-160x100 %}
+							{% endif %}
+						{% endwith %}
+						{% endcomment %}
 
-							<p>{{ post.body|richtext|truncatewords_html:24 }}</p>
-							<footer>
-								<ul class="actions">
-									<li><a href="{% pageurl post %}" class="button large">Continue Reading</a></li>
-								</ul>
-								<ul class="stats">
-									{% with categories=post.categories.all %}
-										{% if categories %}
-												{% for category in categories %}
-													<li style="display: inline">{{ category.name }}</li>
-												{% endfor %}
-										{% endif %}
-									{% endwith %}
-									<li><a href="#" class="icon solid fa-heart">28</a></li>
-									<li><a href="#" class="icon solid fa-comment">128</a></li>
-								</ul>
-							</footer>
-						</article>
+						<p>{{ post.body|richtext|truncatewords_html:24 }}</p>
+						<footer>
+							<ul class="actions">
+								<li><a href="{% pageurl post %}" class="button large">Continue Reading</a></li>
+							</ul>
+							<ul class="stats">
+								{% with categories=post.categories.all %}
+									{% if categories %}
+											{% for category in categories %}
+												<li style="display: inline">{{ category.name }}</li>
+											{% endfor %}
+									{% endif %}
+								{% endwith %}
+								<li><a href="#" class="icon solid fa-heart">28</a></li>
+								<li><a href="#" class="icon solid fa-comment">128</a></li>
+							</ul>
+						</footer>
+					</article>
 
-					{% endwith %}
-				{% endfor %}
+				{% endwith %}
+			{% endfor %}
 
-				<!-- Pagination -->
-					<ul class="actions pagination">
-						<li><a href="" class="disabled button large previous">Previous Page</a></li>
-						<li><a href="#" class="button large next">Next Page</a></li>
-					</ul>
+			<!-- Pagination -->
+				<ul class="actions pagination">
+					<li><a href="" class="disabled button large previous">Previous Page</a></li>
+					<li><a href="#" class="button large next">Next Page</a></li>
+				</ul>
 
-			</div>
+		</div>
 
 		<!-- Sidebar -->
-			<section id="sidebar">
+		<section id="sidebar">
 
-				<!-- Intro -->
-					<section id="intro">
-						<a href="#" class="logo"><img src="images/logo.jpg" alt="" /></a>
-						<header>
-							<h2>{{ page.title }}</h2>
-							<p>{{ page.intro|richtext }}</a></p>
-						</header>
-					</section>
+			<!-- Intro -->
+				<section id="intro">
+					<a href="#" class="logo"><img src="images/logo.jpg" alt="" /></a>
+					<header>
+						<h2>{{ page.title }}</h2>
+						<p>{{ page.intro|richtext }}</a></p>
+					</header>
+				</section>
 
-				<!-- Mini Posts -->
-					<section>
-						<div class="mini-posts">
+			<!-- Mini Posts -->
+				<section>
+					<div class="mini-posts">
+						{% for post in page.get_children %}
+							{% with post=post.specific %}
+							<!-- Mini Post -->
+								<article class="mini-post">
+									<header>
+										<h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
+										<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
+										{% with authors=post.logue_authors.all %}
+											{% if authors %}
+												<ul>
+													{% for iter in authors %}
+														{% image iter.author.image fill-100x100 as img %}
+														<li style="display: inline">
+															<a href="{{ iter.author.website }}" class="author">
+																<img src="{{ img.url }}" alt="{{ iter.author.name }}" />
+															</a>
+														</li>
+													{% endfor %}
+												</ul>
+											{% endif %}
+										{% endwith %}
+									</header>
+									<a href="{% pageurl post %}" class="image thumbnail">{% image post.header_image max-400x400 %}</a>
+								</article>
+							{% endwith %}
+						{% endfor %}
 
-							{% for post in page.get_children %}
-								{% with post=post.specific %}
-								<!-- Mini Post -->
-									<article class="mini-post">
+					</div>
+				</section>
+
+			<!-- Post Links List -->
+				<section>
+					<ul class="posts">
+						{% for post in page.get_children %}
+							{% with post=post.specific %}
+								<li>
+									<article>
 										<header>
 											<h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
 											<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
-											<a href="#" class="author"><img src="{% static 'images/avatar.jpg' %}" alt="" /></a>
 										</header>
 										<a href="{% pageurl post %}" class="image thumbnail">{% image post.header_image max-400x400 %}</a>
 									</article>
-								{% endwith %}
-							{% endfor %}
+								</li>
+							{% endwith %}
+						{% endfor %}
 
-						</div>
-					</section>
+			<!-- About -->
+				<section class="blurb">
+					<h2>About</h2>
+					<p>The Purple Dot is a group of data-wranglin', storytellin' data scientists and developers.</p>
+					<ul class="actions">
+						<li><a href="#" class="button">Learn More</a></li>
+					</ul>
+				</section>
 
-				<!-- Posts List -->
-
-					<section>
-						<ul class="posts">
-							{% for post in page.get_children %}
-								{% with post=post.specific %}
-									<li>
-										<article>
-											<header>
-												<h3><a href="{% pageurl post %}">{{ post.title }}</a></h3>
-												<time class="published" datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date }}</time>
-											</header>
-											<a href="{% pageurl post %}" class="image thumbnail">{% image post.header_image max-400x400 %}</a>
-										</article>
-									</li>
-								{% endwith %}
-							{% endfor %}
-
-				<!-- About -->
-					<section class="blurb">
-						<h2>About</h2>
-						<p>The Purple Dot is a group of storytellin' data scientists and developers.</p>
-						<ul class="actions">
-							<li><a href="#" class="button">Learn More</a></li>
-						</ul>
-					</section>
-
-			</section>
-	</div>
+		</section>
 
 {% endblock content %}

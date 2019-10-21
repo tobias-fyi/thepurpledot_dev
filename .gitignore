@@ -1,5 +1,6 @@
 # Project-specific
 assets/
+db_data/
 
 # Large / Creative / Visual Files or Dirs
 *.psd

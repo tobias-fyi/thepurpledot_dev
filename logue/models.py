@@ -100,8 +100,10 @@ class LoguePage(Page):
         [
             ("heading", blocks.CharBlock(classname="full title")),
             ("paragraph", blocks.RichTextBlock()),
+            ("block_quote", blocks.BlockQuoteBlock()),
             ("image", ImageChooserBlock()),
-        ]
+        ],
+        null=True,
     )
     tags = ClusterTaggableManager(through=LoguePageTag, blank=True)
     categories = ParentalManyToManyField("logue.LogueCategory", blank=True)
@@ -130,7 +132,7 @@ class LoguePage(Page):
                 FieldPanel("tags"),
                 FieldPanel("categories", widget=forms.CheckboxSelectMultiple),
             ],
-            heading="Logue Information",
+            heading="Logue information",
         ),
         ImageChooserPanel("header_image"),
         FieldPanel("intro"),

@@ -7,6 +7,23 @@ import wagtail.images.blocks
 from wagtail.core.rich_text import RichText
 
 
+def convert_to_streamfield(apps, schema_editor):
+    LoguePage = apps.get_model("logue", "LoguePage")
+    for page in LoguePage.objects.all():
+        if page.body.raw_text and not page.body:
+            page.body = [("paragraph", RichText(page.body.raw_text))]
+            page.save()
+
+
+def convert_to_richtext(apps, schema_editor):
+    LoguePage = apps.get_model("logue", "LoguePage")
+    for page in LoguePage.objects.all():
+        if page.body.raw_text is None:
+            raw_text = "".join([child.value.source for child in page.body if child.block_type == "paragraph"])
+            page.body = raw_text
+            page.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [("logue", "0009_auto_20191021_1744")]
@@ -22,5 +39,6 @@ class Migration(migrations.Migration):
                     ("image", wagtail.images.blocks.ImageChooserBlock()),
                 ]
             ),
-        )
+        ),
+        migrations.RunPython(convert_to_streamfield, convert_to_richtext),
     ]

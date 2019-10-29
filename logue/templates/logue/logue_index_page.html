@@ -48,7 +48,7 @@
 						{% endwith %}
 						{% endcomment %}
 
-						<p>{{ post.body|richtext|truncatewords_html:24 }}</p>
+						<p>{{ post.intro|richtext }}</p>
 						<footer>
 							<ul class="actions">
 								<li><a href="{% pageurl post %}" class="button large">Continue Reading</a></li>

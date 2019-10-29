@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load wagtailcore_tags %}
-{% load wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block fiveup_bodyclass %}single is-preload{% endblock fiveup_bodyclass %}
 
@@ -124,7 +122,18 @@
 				</div>
 			</header>
 			<span class="image featured">{% image page.header_image original %}</span>
-			<p>{{ page.body|richtext }}</p>
+			
+			{% for block in page.body %}
+				{% if block.block_type == "paragraph" %}
+					<p>{{ block.value|richtext }}</p>
+				{% elif block.block_type == "image" %}
+					<div class="richtext-image full-width">{% include_block block %}</div>
+				{% else %}
+					{% include_block block %}
+				{% endif %}
+			{% endfor %}
+
+			{% comment %} <p>{{ page.body|richtext }}</p> {% endcomment %}
 
 			{% for item in page.gallery_images.all %}
 			<div style="float: left; margin: 10px">

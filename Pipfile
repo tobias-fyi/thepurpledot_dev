@@ -12,6 +12,10 @@ black = "*"
 wagtail = ">=2.6,<2.7"
 Django = "<2.3,>=2.2"
 wand = "*"
+django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
